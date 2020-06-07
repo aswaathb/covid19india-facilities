@@ -3,7 +3,7 @@ import Footer from './footer';
 import Level from './level';
 import MapExplorer from './mapexplorer';
 import Minigraph from './minigraph';
-import StateMeta from './statemeta';
+// import StateMeta from './statemeta';
 import TimeSeriesExplorer from './timeseriesexplorer';
 
 import {MAP_META, NUM_BARS_STATEPAGE, STATE_NAMES} from '../constants';
@@ -67,7 +67,7 @@ function State(props) {
   const stateCode = useParams().stateCode.toUpperCase();
   const stateName = STATE_NAMES[stateCode];
 
-  const [mapStatistic, setMapStatistic] = useState('confirmed');
+  const [mapStatistic, setMapStatistic] = useState('active');
   const [mapSwitcher, {width}] = useMeasure();
   const [showAllDistricts, setShowAllDistricts] = useState(false);
   const [regionHighlighted, setRegionHighlighted] = useState({
@@ -83,13 +83,13 @@ function State(props) {
       duration: 200,
       delay: 500,
       translateX:
-        mapStatistic === 'confirmed'
+        mapStatistic === 'active'
           ? `${width * 0}px`
-          : mapStatistic === 'active'
+          : mapStatistic === 'occupied'
           ? `${width * 0.25}px`
-          : mapStatistic === 'recovered'
+          : mapStatistic === 'available'
           ? `${width * 0.5}px`
-          : mapStatistic === 'deceased'
+          : mapStatistic === 'temporary'
           ? `${width * 0.75}px`
           : '0px',
       easing: 'spring(1, 80, 90, 10)',
@@ -210,7 +210,7 @@ function State(props) {
               <div
                 className="clickable"
                 onClick={() => {
-                  setMapStatistic('confirmed');
+                  setMapStatistic('active');
                   anime({
                     targets: '.highlight',
                     translateX: `${width * 0}px`,
@@ -221,7 +221,7 @@ function State(props) {
               <div
                 className="clickable"
                 onClick={() => {
-                  setMapStatistic('active');
+                  setMapStatistic('occupied');
                   anime({
                     targets: '.highlight',
                     translateX: `${width * 0.25}px`,
@@ -232,7 +232,7 @@ function State(props) {
               <div
                 className="clickable"
                 onClick={() => {
-                  setMapStatistic('recovered');
+                  setMapStatistic('available');
                   anime({
                     targets: '.highlight',
                     translateX: `${width * 0.5}px`,
@@ -243,7 +243,7 @@ function State(props) {
               <div
                 className="clickable"
                 onClick={() => {
-                  setMapStatistic('deceased');
+                  setMapStatistic('temporary');
                   anime({
                     targets: '.highlight',
                     translateX: `${width * 0.75}px`,
@@ -268,13 +268,13 @@ function State(props) {
               }}
             />
 
-            <StateMeta
+            {/* <StateMeta
               {...{
                 stateCode,
                 data,
                 timeseries,
               }}
-            />
+            /> */}
           </div>
 
           <div className="state-right">
@@ -312,7 +312,7 @@ function State(props) {
                           <div key={districtName} className="district">
                             <h2>{formatNumber(total)}</h2>
                             <h5>{t(districtName)}</h5>
-                            {mapStatistic !== 'active' && (
+                            {mapStatistic !== 'occupied' && (
                               <div className="delta">
                                 <h6 className={mapStatistic}>
                                   {delta > 0
@@ -334,8 +334,8 @@ function State(props) {
                 </div>
 
                 <div className="district-bar-right">
-                  {(mapStatistic === 'confirmed' ||
-                    mapStatistic === 'deceased') && (
+                  {(mapStatistic === 'active' ||
+                    mapStatistic === 'temporary') && (
                     <div className="happy-sign">
                       {Object.keys(timeseries[stateCode] || {})
                         .slice(-NUM_BARS_STATEPAGE)
@@ -349,7 +349,7 @@ function State(props) {
                         ) && (
                         <div
                           className={`alert ${
-                            mapStatistic === 'confirmed' ? 'is-green' : ''
+                            mapStatistic === 'active' ? 'is-green' : ''
                           }`}
                         >
                           <Icon.Smile />

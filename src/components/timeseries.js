@@ -80,14 +80,14 @@ function TimeSeries({timeseries, dates, chartType, isUniform, isLog}) {
         .call(d3.axisRight(yScale).ticks(4, '0~s').tickPadding(4));
 
     const uniformScaleMin = d3.min(dates, (date) =>
-      getStatistic(timeseries[date], chartType, 'active')
+      getStatistic(timeseries[date], chartType, 'occupied')
     );
 
     const uniformScaleMax = d3.max(dates, (date) =>
       Math.max(
-        getStatistic(timeseries[date], chartType, 'confirmed'),
-        getStatistic(timeseries[date], chartType, 'recovered'),
-        getStatistic(timeseries[date], chartType, 'deceased')
+        getStatistic(timeseries[date], chartType, 'active'),
+        getStatistic(timeseries[date], chartType, 'occupied'),
+        getStatistic(timeseries[date], chartType, 'available')
       )
     );
 

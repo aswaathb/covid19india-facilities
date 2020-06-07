@@ -1,14 +1,22 @@
+import Search from './geosearch';
+
 import axios from 'axios';
-import * as Knn from "leaflet-knn";
-import React, { useState, useEffect } from 'react';
+import L from 'leaflet';
+import * as Knn from 'leaflet-knn';
+import React, {useState, useEffect} from 'react';
 import * as Icons from 'react-feather';
-import { Map, Marker, Popup, TileLayer, LayerGroup, LayersControl } from "react-leaflet";
+import {
+  Map,
+  Marker,
+  Popup,
+  TileLayer,
+  LayerGroup,
+  LayersControl,
+} from 'react-leaflet';
 // import {Sidebar, Tab}  from 'react-leaflet-sidebarv2';
 // import 'leaflet-sidebar-v2/css/leaflet-sidebar.css'; // TODO:Import just the .min.css instead of the whole package :|
-import L from 'leaflet';
-import MarkerClusterGroup from "react-leaflet-markercluster";
-// import { Sidebar, Tab } from 'react-leaflet-sidebarv2'
-import Search from './geosearch';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
+// import { Sidebar, Tab } from 'react-leaflet-sidetabs'
 import 'leaflet/dist/leaflet.css';
 
 const {BaseLayer} = LayersControl;
@@ -16,7 +24,7 @@ const {BaseLayer} = LayersControl;
 const user = new L.Icon({
   iconUrl: require('../icons/user.svg'),
   iconRetinaUrl: require('../icons/user.svg'),
-  iconSize: [40, 40]
+  iconSize: [40, 40],
 });
 
 const createClusterCustomIcon = function (cluster) {
@@ -28,12 +36,11 @@ const createClusterCustomIcon = function (cluster) {
 };
 
 function medFilter(feature) {
-  return (feature.properties.priority);
+  return feature.properties.priority;
 }
 function othersFilter(feature) {
-  return (!feature.properties.priority);
+  return !feature.properties.priority;
 }
-
 
 function getDistance(p1, p2) {
   // p1 and p2 => [lat1, long1], [lat2, long2]
@@ -51,10 +58,14 @@ function getDistance(p1, p2) {
 
 function generateIcon(result) {
   return new L.Icon({
-    iconUrl: require('../icons/' + result.layer.feature.properties.icon + '.svg'),
-    iconRetinaUrl: require('../icons/' + result.layer.feature.properties.icon + '.svg'),
+    iconUrl: require('../icons/' +
+      result.layer.feature.properties.icon +
+      '.svg'),
+    iconRetinaUrl: require('../icons/' +
+      result.layer.feature.properties.icon +
+      '.svg'),
     iconSize: [25, 25],
-  })
+  });
 }
 
 export default function MapChart(props) {
@@ -67,7 +78,6 @@ export default function MapChart(props) {
   //     collapsed: false,
   //     selected: 'home',
   //   };
-
 
   // function onClose() {
   //   setCollapsed( true );
@@ -93,20 +103,27 @@ export default function MapChart(props) {
       });
   };
 
-  const center =  props.currentLocation || [21.3041, 77.1025];
-  const zoom = props.radius ? (props.radius > 6 ? 11 : 12) : 5;
+  const center = props.currentLocation || [21.3041, 77.1025];
+  const zoom = 5;
   let medKnn;
   let restKnn;
-  let panKnn
+  let panKnn;
 
-  const userLocation = props.currentLocation
+  const userLocation = props.currentLocation;
   const hK = 5; // Finds the K nearest hospitals/labs wrt user location
-  const rK = 50;// Finds the K nearest essentials wrt user location
+  const rK = 50; // Finds the K nearest essentials wrt user location
   const rad = 100 * 1000; // Max distance of the K points, in meters
 
   if (userLocation) {
-    medKnn = new Knn(L.geoJSON(geoData, { filter: medFilter })).nearestLayer([userLocation[1], userLocation[0]], hK);
-    restKnn = new Knn(L.geoJSON(geoData, { filter: othersFilter })).nearestLayer([userLocation[1], userLocation[0]], rK, rad);
+    medKnn = new Knn(L.geoJSON(geoData, {filter: medFilter})).nearestLayer(
+      [userLocation[1], userLocation[0]],
+      hK
+    );
+    restKnn = new Knn(L.geoJSON(geoData, {filter: othersFilter})).nearestLayer(
+      [userLocation[1], userLocation[0]],
+      rK,
+      rad
+    );
     panKnn = geoData?.features?.filter(
       (feat) =>
         feat.properties.state === 'PAN India' ||
@@ -115,63 +132,60 @@ export default function MapChart(props) {
     );
   }
 
-  var results = {
-    "name": "NearestK-Essentials",
-    "type": "FeatureCollection",
-    "features": []
-
+  const results = {
+    name: 'NearestK-Essentials',
+    type: 'FeatureCollection',
+    features: [],
   };
 
-  
   if (medKnn) {
     let i = 0;
     for (i = 0; i < medKnn.length; i++) {
       results.features.push({
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": medKnn[i].layer.feature.geometry.coordinates
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: medKnn[i].layer.feature.geometry.coordinates,
         },
-        "properties": {
-          "name": medKnn[i].layer.feature.properties.name,
-          "desc": medKnn[i].layer.feature.properties.desc,
-          "addr": medKnn[i].layer.feature.properties.addr,
-          "phone": medKnn[i].layer.feature.properties.phone,
-          "contact": medKnn[i].layer.feature.properties.contact,
-          "dist": getDistance(
+        properties: {
+          name: medKnn[i].layer.feature.properties.name,
+          desc: medKnn[i].layer.feature.properties.desc,
+          addr: medKnn[i].layer.feature.properties.addr,
+          phone: medKnn[i].layer.feature.properties.phone,
+          contact: medKnn[i].layer.feature.properties.contact,
+          dist: getDistance(
             userLocation,
             medKnn[i].layer.feature.geometry.coordinates.reverse()
           ),
-          "icon": generateIcon(medKnn[i]),
-          "recordid": medKnn[i].layer.feature.properties.recordid,
-        }
+          icon: generateIcon(medKnn[i]),
+          recordid: medKnn[i].layer.feature.properties.recordid,
+        },
       });
     }
   }
-
 
   if (restKnn) {
     let j = 0;
     for (j = 0; j < restKnn.length; j++) {
       results.features.push({
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": restKnn[j].layer.feature.geometry.coordinates
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: restKnn[j].layer.feature.geometry.coordinates,
         },
-        "properties": {
-          "name": restKnn[j].layer.feature.properties.name,
-          "desc": restKnn[j].layer.feature.properties.desc,
-          "addr": restKnn[j].layer.feature.properties.addr,
-          "phone": restKnn[j].layer.feature.properties.phone,
-          "contact": restKnn[j].layer.feature.properties.contact,
-          "dist": getDistance(
+        properties: {
+          name: restKnn[j].layer.feature.properties.name,
+          desc: restKnn[j].layer.feature.properties.desc,
+          addr: restKnn[j].layer.feature.properties.addr,
+          phone: restKnn[j].layer.feature.properties.phone,
+          contact: restKnn[j].layer.feature.properties.contact,
+          dist: getDistance(
             userLocation,
             restKnn[j].layer.feature.geometry.coordinates.reverse()
           ),
-          "icon": generateIcon(restKnn[j]),
-          "recordid": restKnn[j].layer.feature.properties.recordid
-        }
+          icon: generateIcon(restKnn[j]),
+          recordid: restKnn[j].layer.feature.properties.recordid,
+        },
       });
     }
   }
@@ -185,7 +199,6 @@ export default function MapChart(props) {
 
   return (
     <div>
-
       {/* <Sidebar
         id="sidebar"
         position="right"
@@ -206,35 +219,35 @@ export default function MapChart(props) {
           </Tab>           
       </Sidebar> */}
 
-      <Map 
-        center={center} 
-        zoom={zoom} 
+      <Map
+        center={center}
+        zoom={zoom}
         // minZoom={5}
         // maxZoom={20}
       >
-        <LayersControl position="topright" >
-        <BaseLayer checked name="Light Mode">
-          <TileLayer
-            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url='https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png' // != DarkMode
-            detectRetina={true}
-          />
-        </BaseLayer>
-        <BaseLayer name="Dark Mode">
-          <TileLayer
-            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url='https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png' // == DarkMode
-            detectRetina={true}
-          />
-        </BaseLayer>
+        <LayersControl position="topright">
+          <BaseLayer checked name="Light Mode">
+            <TileLayer
+              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" // != DarkMode
+              detectRetina={true}
+            />
+          </BaseLayer>
+          <BaseLayer name="Dark Mode">
+            <TileLayer
+              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" // == DarkMode
+              detectRetina={true}
+            />
+          </BaseLayer>
         </LayersControl>
-        
+
         <Search search={props.searchMap} />
-        {(props.currentLocation) && (
+        {props.currentLocation && (
           <Marker position={props.currentLocation} icon={user} key="userLoc">
             <Popup>
               <h2>Your current location</h2>
-                {results?.features
+              {/* {results?.features
                 .filter((feature) => {
                   return (
                     // Object.keys(categories)
@@ -251,62 +264,63 @@ export default function MapChart(props) {
                   {p.properties.desc} <br/>
                   {p.properties.phone}
                   </p>
-                ))}
+                ))} */}
             </Popup>
           </Marker>
         )}
 
         <LayerGroup>
-        <MarkerClusterGroup
+          <MarkerClusterGroup
             showCoverageOnHover={true}
             maxClusterRadius={10}
             spiderfyDistanceMultiplier={2}
             iconCreateFunction={createClusterCustomIcon}
-        >
-          {results?.features
-          .filter((feature) => {
-            return (
-              // Object.keys(categories)
-              //   .filter(
-              //     (categoryName) => categories[categoryName].isSelected === true
-              //   )
-              //   .includes(feature.properties.icon) && 
-              feature.properties.dist
-            );
-          })
-          .map(d => (
-            <Marker
-              key={d.properties.id}
-              position={d.geometry.coordinates}
-              icon={d.properties.icon}
-            >
-              <Popup className="custom-popup" >
-                <div>
-                  <a 
-                    href={d.properties.contact} 
-                    target="_noblank" 
-                    >
-                    <h2>{d.properties.name} {"  "}
-                    <Icons.ExternalLink/></h2> 
-                    </a>
-                    <p>
-                    <b>Description:</b> {d.properties.desc}<br />
-                    <b>Address:</b> {d.properties.addr}
-                    {d.properties.phone?(<><br />
-                    <b>Phone:</b> {d.properties.phone}<br/> </>):null
-                    }
-                    {d.properties.dist} km away from your location
-                    </p>                  
-                </div>
-              </Popup>
-            </Marker>
-
-          ))}
-        </MarkerClusterGroup>
+          >
+            {results?.features
+              .filter((feature) => {
+                return (
+                  // Object.keys(categories)
+                  //   .filter(
+                  //     (categoryName) => categories[categoryName].isSelected === true
+                  //   )
+                  //   .includes(feature.properties.icon) &&
+                  feature.properties.dist
+                );
+              })
+              .map((d) => (
+                <Marker
+                  key={d.properties.id}
+                  position={d.geometry.coordinates}
+                  icon={d.properties.icon}
+                >
+                  <Popup className="custom-popup">
+                    <div>
+                      <a href={d.properties.contact} target="_noblank">
+                        <h2>
+                          {d.properties.name} {'  '}
+                          <Icons.ExternalLink />
+                        </h2>
+                      </a>
+                      <p>
+                        <b>Description:</b> {d.properties.desc}
+                        <br />
+                        <b>Address:</b> {d.properties.addr}
+                        {d.properties.phone ? (
+                          <>
+                            <br />
+                            <b>Phone:</b> {d.properties.phone}
+                            <br />{' '}
+                          </>
+                        ) : null}
+                        {d.properties.dist} km away from your location
+                      </p>
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+          </MarkerClusterGroup>
         </LayerGroup>
-
       </Map>
     </div>
-  )
+  );
 }
-

@@ -50,9 +50,9 @@ function Minigraph({timeseries, date: timelineDate}) {
 
     const dailyMax = d3.max(dates, (date) =>
       Math.max(
-        getStatistic(timeseries[date], 'delta', 'confirmed'),
-        getStatistic(timeseries[date], 'delta', 'recovered'),
-        getStatistic(timeseries[date], 'delta', 'deceased')
+        getStatistic(timeseries[date], 'delta', 'active'),
+        getStatistic(timeseries[date], 'delta', 'occupied'),
+        getStatistic(timeseries[date], 'delta', 'available')
       )
     );
 

@@ -72,8 +72,8 @@ function Navbar({pages, darkMode}) {
               </Link>
             </span>
             <span>
-              <Link to="/essentials">
-                <Icon.Package {...activeNavIcon('/essentials')} />
+              <Link to="/navigate">
+                <Icon.Map {...activeNavIcon('/navigate')} />
               </Link>
             </span>
             <span>

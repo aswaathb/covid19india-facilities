@@ -7,13 +7,15 @@ export const PRIMARY_STATISTICS = [
   'temporary',
 ];
 
-export const MAP_STATISTICS = [...PRIMARY_STATISTICS
-                                //  , 'tested'
-                               ];
+export const MAP_STATISTICS = [
+  ...PRIMARY_STATISTICS,
+  //  , 'tested'
+];
 
-export const TIMESERIES_STATISTICS = [...PRIMARY_STATISTICS
-                                //  , 'tested'                                        
-                                      ];
+export const TIMESERIES_STATISTICS = [
+  ...PRIMARY_STATISTICS,
+  //  , 'tested'
+];
 
 export const D3_TRANSITION_DURATION = 300;
 
@@ -26,11 +28,11 @@ export const UNKNOWN_DISTRICT_KEY = 'Unknown';
 export const INDIA_ISO_SUFFIX = 'T00:00:00+05:30';
 
 export const COLORS = {
-  confirmed: '#ff073a',
-  active: '#007bff',
-  recovered: '#28a745',
-  deceased: '#6c757d',
-  tested: '#4b1eaa',
+  active: '#ff073a',
+  occupied: '#007bff',
+  available: '#28a745',
+  temporary: '#6c757d',
+  // tested: '#4b1eaa',
 };
 
 export const TIMESERIES_CHART_TYPES = {

@@ -25,8 +25,8 @@ const Demographics = lazy(() =>
 const State = lazy(() =>
   import('./components/state' /* webpackChunkName: "State" */)
 );
-const Essentials = lazy(() =>
-  import('./components/essentials' /* webpackChunkName: "Essentials" */)
+const Navigate = lazy(() =>
+  import('./components/navigate' /* webpackChunkName: "Navigate" */)
 );
 
 const schemaMarkup = {
@@ -57,9 +57,9 @@ function App() {
       showInNavbar: true,
     },
     {
-      pageLink: '/essentials',
-      view: Essentials,
-      displayName: t('Essentials'),
+      pageLink: '/navigate',
+      view: Navigate,
+      displayName: t('Navigate'),
       animationDelayForNavbar: 0.5,
       showInNavbar: true,
     },

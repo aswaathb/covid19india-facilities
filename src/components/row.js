@@ -178,7 +178,7 @@ const DistrictRow = React.memo(PureDistrictRow, isDistrictRowEqual);
 function Row({stateCode, data, regionHighlighted, setRegionHighlighted}) {
   const [showDistricts, setShowDistricts] = useState(false);
   const [sortData, setSortData] = useLocalStorage('districtSortData', {
-    sortColumn: 'confirmed',
+    sortColumn: 'active',
     isAscending: false,
   });
 
