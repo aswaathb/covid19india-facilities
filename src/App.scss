@@ -610,7 +610,7 @@ h6 {
       padding-right: 1rem;
     }
 
-    &.confirmed {
+    &.active {
       background: $cherry-light;
 
       h3,
@@ -625,7 +625,7 @@ h6 {
       }
     }
 
-    &.active {
+    &.occupied {
       background: $blue-light;
 
       h3,
@@ -803,12 +803,105 @@ h6 {
   }
 }
 
+// LEAFLET MAP CSS START
+
+.leaflet-container {
+  width: 100%;
+  height: 90vh;
+  
+}
+.custom-popup .leaflet-popup-content-wrapper {
+  background: $pblue;
+  color: $white;
+  // font-size:16px;
+  line-height:24px;
+  font-family: "archia" !important;
+  svg {
+    color: $yellow;
+    align-content: right;
+    transition: all 0.1s ease-in-out;
+  }
+}
+.custom-popup .leaflet-popup-content-wrapper a {
+  background: $pblue;
+  color: $white;
+  // font-size:16px;
+  line-height:24px;
+  font-family: "archia" !important;
+  svg {
+    color: $yellow;
+    align-content:right;
+    transition: all 0.1s ease-in-out;
+  }
+}
+
+
+.marker-cluster-custom {
+  background: $pink;
+  border: 5px solid $purple;
+  border-radius: 50%;
+  color: $white;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-family: "archia" !important;
+  width: 30px;
+} 
+
+// LEAFLET MAP CSS END
+
 .Essentials {
   align-self: center;
   display: flex;
   flex-direction: column;
-  margin-top: 2rem;
-  width: 30rem;
+  margin-top: 1rem;
+  width: 95%;
+  height: 100%;
+
+  .tracker_bar {
+    // margin-top: 3rem;
+    margin-left: 3rem;
+    width: 100%;
+    .close-button {
+        position: absolute;
+        right: 0;
+        stroke: $gray;
+        top: -2rem;
+        svg {
+            width: 16px;
+        }
+    }
+    .button {
+        align-self: center;
+        background: $gray-light;
+        border-radius: 5px;
+        flex-direction: row;
+        justify-content: center;
+        margin: 0;
+        transition: all 0.2s ease-in-out;
+        width: 100%;
+        &:hover {
+            background: $gray-hover;
+            svg {
+                color: $gray;
+            }
+        }
+        h3 {
+            color: $gray;
+            font-weight: 600;
+            text-align: center;
+            text-transform: none;
+            width: 25rem;
+        }
+        svg {
+            color: $gray-mid;
+            transition: all 0.1s ease-in-out;
+        }
+        & > * {
+            align-self: center;
+        }
+    }
+}
 
   img,
   .alert {
@@ -829,6 +922,7 @@ h6 {
       margin: 0;
     }
   }
+  
 
   button {
     align-self: center;
@@ -1559,15 +1653,15 @@ h6 {
     width: calc(25%) !important;
     z-index: -1;
 
-    &.active {
+    &.occupied {
       background: $blue-light;
     }
 
-    &.recovered {
+    &.available {
       background: $green-light;
     }
 
-    &.deceased {
+    &.temporary {
       background: $gray-light;
     }
   }
@@ -1619,7 +1713,7 @@ h6 {
     width: 100%;
   }
 
-  .is-confirmed {
+  .is-active {
     h1,
     h5 {
       color: $cherry;
@@ -1630,7 +1724,7 @@ h6 {
     }
   }
 
-  .is-active {
+  .is-occupied {
     h1,
     h5 {
       color: $blue;
@@ -1641,7 +1735,7 @@ h6 {
     }
   }
 
-  .is-recovered {
+  .is-available {
     h1,
     h5 {
       color: $green;
@@ -1652,7 +1746,7 @@ h6 {
     }
   }
 
-  .is-deceased {
+  .is-temporary {
     h1,
     h5 {
       color: $gray;
@@ -1745,15 +1839,15 @@ table {
       color: $gray;
       text-align: right;
 
-      &.is-confirmed {
+      &.is-active {
         color: $cherry;
       }
 
-      &.is-active {
+      &.is-occupied {
         color: $blue;
       }
 
-      &.is-recovered {
+      &.is-available {
         color: $green;
       }
 
@@ -1823,15 +1917,15 @@ table {
         display: block;
         font-size: 11px !important;
 
-        &.is-confirmed {
+        &.is-active {
           color: $cherry;
         }
 
-        &.is-active {
+        &.is-occupied {
           color: $blue;
         }
 
-        &.is-recovered {
+        &.is-available {
           color: $green;
         }
 
@@ -2177,19 +2271,19 @@ table {
       width: calc(100% - 10rem);
       word-wrap: break-word;
 
-      &.confirmed {
+      &.active {
         color: $brick;
       }
 
-      &.active {
+      &.occupied {
         color: $blue;
       }
 
-      &.recovered {
+      &.available {
         color: $green;
       }
 
-      &.deceased {
+      &.temporary {
         color: $gray;
       }
 
@@ -2229,19 +2323,19 @@ table {
         font-weight: 600;
       }
 
-      &.confirmed {
+      &.active {
         color: $brick;
       }
 
-      &.active {
+      &.occupied {
         color: $blue;
       }
 
-      &.recovered {
+      &.available {
         color: $green;
       }
 
-      &.deceased {
+      &.temporary {
         color: $gray;
       }
 
@@ -2301,7 +2395,7 @@ table {
         font-weight: 600;
       }
 
-      &.confirmed {
+      &.active {
         background: $cherry-light;
 
         h5,
@@ -2314,7 +2408,7 @@ table {
         }
       }
 
-      &.recovered {
+      &.available {
         background: $green-light;
 
         h5,
@@ -2327,7 +2421,7 @@ table {
         }
       }
 
-      &.active {
+      &.occupied {
         background: $blue-light;
 
         h5,
@@ -2340,7 +2434,7 @@ table {
         }
       }
 
-      &.deceased {
+      &.temporary {
         background: $gray-light;
 
         h5,
@@ -2799,7 +2893,7 @@ input {
       }
     }
 
-    &.is-recovered {
+    &.is-available {
       h5 {
         color: $green-mid;
 
@@ -2814,7 +2908,7 @@ input {
       }
     }
 
-    &.is-deceased {
+    &.is-temporary {
       h5 {
         color: $gray-mid;
 
@@ -2829,7 +2923,7 @@ input {
       }
     }
 
-    &.is-active {
+    &.is-occupied {
       h5 {
         color: $blue-mid;
 
@@ -2893,7 +2987,7 @@ input {
       }
     }
 
-    &.is-recovered {
+    &.is-available {
       background: $green-light;
 
       svg {
@@ -2910,7 +3004,7 @@ input {
       }
     }
 
-    &.is-deceased {
+    &.is-temporary {
       background: $gray-light;
 
       svg {
@@ -2927,7 +3021,7 @@ input {
       }
     }
 
-    &.is-active {
+    &.is-occupied {
       background: $blue-light;
 
       svg {
@@ -4302,19 +4396,19 @@ footer {
     font-weight: 900;
     margin-bottom: 0.5rem;
 
-    &.confirmed {
+    &.active {
       color: $red;
     }
 
-    &.active {
+    &.occupied {
       color: $blue;
     }
 
-    &.recovered {
+    &.available {
       color: $green;
     }
 
-    &.deceased {
+    &.temporary {
       color: $gray;
     }
   }
@@ -4420,19 +4514,19 @@ footer {
         h6 {
           margin: 0;
 
-          &.confirmed {
+          &.active {
             color: $red-mid;
           }
 
-          &.active {
+          &.occupied {
             color: $blue-mid;
           }
 
-          &.recovered {
+          &.available {
             color: $green-mid;
           }
 
-          &.deceased {
+          &.temporary {
             color: $gray-mid;
           }
         }
@@ -4442,19 +4536,19 @@ footer {
           vertical-align: bottom;
           width: 10px;
 
-          &.confirmed {
+          &.active {
             color: $red-mid;
           }
 
-          &.active {
+          &.occupied {
             color: $blue-mid;
           }
 
-          &.recovered {
+          &.available {
             color: $green-mid;
           }
 
-          &.deceased {
+          &.temporary {
             color: $gray-mid;
           }
         }

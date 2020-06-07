@@ -202,7 +202,8 @@ function KnnResults({userLocation, userState}) {
                 .filter(
                   (categoryName) => categories[categoryName].isSelected === true
                 )
-                .includes(feature.properties.icon) && feature.properties.dist
+                .includes(feature.properties.icon)
+                // && feature.properties.dist
             );
           })
           .map((result, i) => (
@@ -243,7 +244,7 @@ function KnnResults({userLocation, userState}) {
             </div>
           ))}
 
-        <div>
+        {/* <div>
           <h3 className="pan-divider">{`Throughout ${userState} and India`}</h3>
         </div>
 
@@ -293,7 +294,7 @@ function KnnResults({userLocation, userState}) {
                 ))}
               </div>
             </div>
-          ))}
+          ))} */}
       </div>
     );
   else return null;

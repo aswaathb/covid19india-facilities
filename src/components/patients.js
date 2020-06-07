@@ -1,3 +1,6 @@
+// TODO Adapt this page for resource (PPEs, Ventilators etc) availability/management
+
+
 import PatientsView from './patientsview';
 
 import {parse} from 'date-fns';
